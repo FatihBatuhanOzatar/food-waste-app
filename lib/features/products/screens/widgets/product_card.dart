@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -279,9 +280,14 @@ class _ProductCardState extends State<ProductCard> {
       height: 32,
       child: ElevatedButton(
         onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Rezervasyon yakında eklenecek')),
-          );
+          // If onTap is provided (e.g. from ProductListScreen), we can just call it,
+          // OR we can use go_router directly. Since we already added go_router
+          // let's just go there directly if onTap is not provided, or prefer the onTap if it is.
+          if (widget.onTap != null) {
+            widget.onTap!();
+          } else {
+            context.push('/product/${widget.product.id}');
+          }
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,

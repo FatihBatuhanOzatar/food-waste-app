@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
@@ -151,7 +152,11 @@ class ProductListScreen extends ConsumerWidget {
                     separatorBuilder: (_, _) =>
                         const SizedBox(height: AppSpacing.sm),
                     itemBuilder: (context, index) {
-                      return ProductCard(product: products[index]);
+                      return ProductCard(
+                        product: products[index],
+                        onTap: () =>
+                            context.push('/product/${products[index].id}'),
+                      );
                     },
                   ),
                 );

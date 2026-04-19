@@ -72,3 +72,26 @@
 - Real distance calculation using user's GPS location.
 - Dynamic pricing recalculation based on time tiers.
 - Product image loading from Supabase storage.
+
+## Product Detail & Reservation Flow
+
+### Files Created/Modified
+- `lib/features/orders/models/order.dart` & `order_status.dart`: Enum and Model mapping to Supabase structure with JOIN capabilities.
+- `lib/features/orders/repositories/order_repository.dart`: DB ops for creating/canceling reservations and updating statuses while keeping stock in sync.
+- `lib/features/orders/providers/order_provider.dart`: `orderRepositoryProvider`, `userOrdersProvider` and `orderActionProvider`.
+- `lib/features/products/screens/product_detail_screen.dart`: Complete detail view with info matching UI_GUIDELINES and confirmation bottom sheet.
+- `lib/features/orders/screens/my_orders_screen.dart`: View for user's past/active orders with pull-to-refresh.
+- `lib/features/products/screens/widgets/product_card.dart`: Tap handler added.
+- `lib/core/widgets/main_scaffold.dart`: Added `MyOrdersScreen` to the second tab.
+- `lib/core/routing/app_router.dart`: Added route path `/product/:id`.
+
+### Implementation Details & Decisions Made
+- `OrderStatus` explicitly parses db snake_case enum values and provides Turkish translations.
+- `OrderRepository.createReservation` handles inventory decrement concurrently. Transaction limitations noted in TODO.
+- The `OrderNotifier` manages creating/canceling orders and triggers invalidation on `userOrdersProvider` and `productListProvider` since stock availability changes.
+- In `ProductDetailScreen`, `use_build_context_synchronously` is handled by checking `sheetContext.mounted` to pop sheets safely after async work.
+- Tapping a product card delegates to GoRouter.
+
+### TODO Comments Added
+- `order_repository.dart`: Note about lacking full transactional safety leading to race conditions on the last stock.
+- `product_detail_screen.dart`: Placeholder for actual distance calculation logic.

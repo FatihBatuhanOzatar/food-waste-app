@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../features/orders/screens/my_orders_screen.dart';
 import '../../features/products/screens/product_list_screen.dart';
 
 /// Main application scaffold with bottom navigation bar.
@@ -28,7 +29,7 @@ class _MainScaffoldState extends State<MainScaffold> {
   /// Others are placeholder screens.
   static const List<Widget> _screens = [
     ProductListScreen(),
-    _PlaceholderScreen(title: 'Siparişlerim', message: 'Yakında'),
+    MyOrdersScreen(),
     _PlaceholderScreen(title: 'Etkim', message: 'Yakında'),
     _PlaceholderScreen(title: 'Profil', message: 'Yakında'),
   ];

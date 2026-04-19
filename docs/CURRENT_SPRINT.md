@@ -9,6 +9,7 @@
 | Flutter project scaffold | 2026-04-16 | Full skeleton: packages, folder structure, core files, `flutter analyze` clean |
 | Auth feature implementation | 2026-04-19 | Login, register, KVKK consent screens; `AuthRepository`; Providers and GoRouter logic. |
 | Home / Product List screen | 2026-04-19 | Product model, ProductRepository (Supabase JOIN with businesses), providers (list + filter), ProductCard widget, ProductListScreen with category chips, MainScaffold with 4-tab bottom nav, router updated. |
+| Product detail & reservation | 2026-04-19 | Order model & OrderStatus enum, `OrderRepository` with stock decrement logic, `orderProvider`s, `ProductDetailScreen` (hero, reserve button, confirmation sheet), `MyOrdersScreen` integrated to `MainScaffold`, `/product/:id` route added. |
 
 **Scaffold deliverables:**
 - `flutter create` with Android/iOS/Web platforms (`com.foodwasteapp`)
@@ -39,8 +40,7 @@ _Nothing currently in progress._
 > **Recommended next task: Business Profile Feature (Sprint 1, Week 2)**
 
 1. **Business profile feature** — Business onboarding, `BusinessRepository`, `businessProvider`.
-2. **Product detail screen** — Full product detail with pickup window, dynamic pricing countdown, and reserve button.
-3. **Database schema migration** — Create `profiles`, `businesses`, `products`, `orders` tables in Supabase with RLS policies (update `docs/DATABASE_SCHEMA.md`).
+2. **Database schema migration** — Create `profiles`, `businesses`, `products`, `orders` tables in Supabase with RLS policies (update `docs/DATABASE_SCHEMA.md`).
 
 ### 🚫 Blockers
 

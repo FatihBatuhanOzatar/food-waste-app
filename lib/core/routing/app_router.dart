@@ -6,6 +6,7 @@ import '../../features/auth/providers/auth_provider.dart';
 import '../../features/auth/screens/kvkk_consent_screen.dart';
 import '../../features/auth/screens/login_screen.dart';
 import '../../features/auth/screens/register_screen.dart';
+import '../../features/products/screens/product_detail_screen.dart';
 import '../widgets/main_scaffold.dart';
 import 'route_names.dart';
 
@@ -90,6 +91,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/home',
         name: RouteNames.home,
         builder: (context, state) => const MainScaffold(),
+      ),
+      GoRoute(
+        path: '/product/:id',
+        name: 'product_detail',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return ProductDetailScreen(productId: id);
+        },
       ),
     ],
   );
