@@ -32,3 +32,43 @@
 - Store business registration form data to `businesses` table upon feature addition.
 - Enable Google Auth.
 - Configure password reset.
+
+## Home / Product List (Product Discovery)
+
+### Files Created/Modified
+- `lib/features/products/models/product.dart`: Full Product model with `fromJson` handling nested `businesses` JOIN.
+- `lib/features/products/repositories/product_repository.dart`: Supabase queries with `select('*, businesses(name, latitude, longitude)')`.
+- `lib/features/products/providers/product_list_provider.dart`: `productRepositoryProvider`, `productListProvider`, `selectedCategoryProvider`, `filteredProductListProvider`.
+- `lib/features/products/providers/product_detail_provider.dart`: `productDetailProvider` (FutureProvider.family).
+- `lib/features/products/screens/product_list_screen.dart`: Full home screen with greeting, search bar, category chips, Harita/Liste toggle, product list.
+- `lib/features/products/screens/widgets/product_card.dart`: Reusable product card with countdown timer, price display, and action buttons.
+- `lib/core/widgets/main_scaffold.dart`: Bottom navigation scaffold with 4 tabs (Keşfet, Siparişlerim, Etkim, Profil).
+- `lib/core/routing/app_router.dart`: `/home` route now uses `MainScaffold` instead of `HomePlaceholderScreen`.
+
+### Implementation Details & Decisions Made
+- Supabase query JOINs products with businesses table to get business name and location in a single query.
+- Category chips map Turkish labels to database values: Fırın→bread, Kafe→drink, Pastane→pastry,dessert (comma-separated), Sürpriz Kutu→surprise_box (filters by listing_type).
+- Countdown timer updates every 60 seconds via `Timer.periodic`. Format: "Xs Ydk kaldı" / "Ydk kaldı" / "Süre doldu".
+- Bottom nav uses `IndexedStack` to preserve tab state across switches.
+- Custom bottom nav (not `BottomNavigationBar`) to match UI_GUIDELINES spec exactly — white bg, top border, terracotta active.
+- All non-functional features (search, map, reserve, favorite) show Turkish SnackBar messages.
+- Image placeholders use category-specific Material Icons on light terracotta background.
+
+### Non-functional Placeholders (with SnackBars)
+- Search bar → "Arama yakında eklenecek"
+- Harita toggle → "Harita görünümü yakında eklenecek"
+- Ayır button → "Rezervasyon yakında eklenecek"
+- Heart/favorite → visual only, no action
+
+### TODO Comments Added
+- `product_card.dart`: Replace hardcoded "350m" with real distance calculation (Haversine).
+- `product_card.dart`: Implement actual dynamic price tier countdown format.
+- `product_detail_provider.dart`: Add live-updating dynamic price calculation.
+
+### Future TODOs
+- Implement real search functionality.
+- Implement map view (Google Maps integration).
+- Add reservation flow from "Ayır" button.
+- Real distance calculation using user's GPS location.
+- Dynamic pricing recalculation based on time tiers.
+- Product image loading from Supabase storage.

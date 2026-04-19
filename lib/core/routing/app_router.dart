@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/auth/providers/auth_provider.dart';
-import '../../features/auth/screens/home_placeholder_screen.dart';
 import '../../features/auth/screens/kvkk_consent_screen.dart';
 import '../../features/auth/screens/login_screen.dart';
 import '../../features/auth/screens/register_screen.dart';
+import '../widgets/main_scaffold.dart';
 import 'route_names.dart';
 
 /// Provides the [GoRouter] instance with auth-aware redirect logic.
@@ -89,7 +89,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/home',
         name: RouteNames.home,
-        builder: (context, state) => const HomePlaceholderScreen(),
+        builder: (context, state) => const MainScaffold(),
       ),
     ],
   );
