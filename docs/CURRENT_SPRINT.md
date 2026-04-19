@@ -10,6 +10,7 @@
 | Auth feature implementation | 2026-04-19 | Login, register, KVKK consent screens; `AuthRepository`; Providers and GoRouter logic. |
 | Home / Product List screen | 2026-04-19 | Product model, ProductRepository (Supabase JOIN with businesses), providers (list + filter), ProductCard widget, ProductListScreen with category chips, MainScaffold with 4-tab bottom nav, router updated. |
 | Product detail & reservation | 2026-04-19 | Order model & OrderStatus enum, `OrderRepository` with stock decrement logic, `orderProvider`s, `ProductDetailScreen` (hero, reserve button, confirmation sheet), `MyOrdersScreen` integrated to `MainScaffold`, `/product/:id` route added. |
+| Business Panel | 2026-04-19 | `Business` model, `BusinessRepository`, Riverpod providers. `BusinessScaffold`, `BusinessDashboardScreen`, `BusinessOrdersScreen`, `ProductCreateScreen`, `BusinessSetupScreen`. Auth-aware routing for role='business'. `ImpactRepository` implemented for pickup tracking. |
 
 **Scaffold deliverables:**
 - `flutter create` with Android/iOS/Web platforms (`com.foodwasteapp`)
@@ -37,10 +38,9 @@ _Nothing currently in progress._
 
 ### 📋 Next Up
 
-> **Recommended next task: Business Profile Feature (Sprint 1, Week 2)**
+> **Recommended next task: Database Schema Migration (Sprint 1, Week 2)**
 
-1. **Business profile feature** — Business onboarding, `BusinessRepository`, `businessProvider`.
-2. **Database schema migration** — Create `profiles`, `businesses`, `products`, `orders` tables in Supabase with RLS policies (update `docs/DATABASE_SCHEMA.md`).
+1. **Database schema migration** — Create `profiles`, `businesses`, `products`, `orders` tables in Supabase with RLS policies (update `docs/DATABASE_SCHEMA.md`).
 
 ### 🚫 Blockers
 

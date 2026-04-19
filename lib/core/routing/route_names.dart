@@ -47,11 +47,17 @@ abstract final class RouteNames {
   // Business
   // ---------------------------------------------------------------------------
 
-  /// Business owner dashboard.
+  /// Business owner dashboard (main business panel).
   static const String businessDashboard = 'business-dashboard';
 
-  /// Product creation / editing form.
+  /// Business onboarding / setup screen.
+  static const String businessSetup = 'business-setup';
+
+  /// Product creation form.
   static const String productCreate = 'product-create';
+
+  /// Product editing form.
+  static const String productEdit = 'product-edit';
 
   /// Business-side order management.
   static const String businessOrders = 'business-orders';

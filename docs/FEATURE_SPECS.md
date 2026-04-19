@@ -95,3 +95,38 @@
 ### TODO Comments Added
 - `order_repository.dart`: Note about lacking full transactional safety leading to race conditions on the last stock.
 - `product_detail_screen.dart`: Placeholder for actual distance calculation logic.
+
+## Business Panel (US-11 to US-18)
+
+### Files Created/Modified
+- `lib/features/businesses/models/business.dart`: `Business` model mapping to `businesses` table.
+- `lib/features/businesses/repositories/business_repository.dart`: DB ops for business profiles and dashboard stats.
+- `lib/features/profile/repositories/impact_repository.dart`: DB ops for `impact_logs`.
+- `lib/features/products/repositories/product_repository.dart`: Added `getBusinessProducts`, `createProduct`, `updateProduct`, `deleteProduct`.
+- `lib/features/orders/providers/order_provider.dart`: Added `businessOrdersProvider`.
+- `lib/features/products/providers/product_list_provider.dart`: Added `businessProductsProvider`.
+- `lib/features/businesses/providers/business_provider.dart`: `myBusinessProvider`, `dashboardStatsProvider`, `BusinessNotifier`.
+- `lib/core/widgets/business_scaffold.dart`: Parallel to `MainScaffold` but for business role (Panel, Ürünlerim, Siparişler, Profil).
+- `lib/features/businesses/screens/business_dashboard_screen.dart`: Dashboard with metrics and active products.
+- `lib/features/businesses/screens/business_orders_screen.dart`: Order management with tabbed filtering by status.
+- `lib/features/businesses/screens/business_setup_screen.dart`: Business setup and onboarding form.
+- `lib/features/businesses/screens/product_create_screen.dart`: Form to create/edit products.
+- `lib/core/routing/app_router.dart`: Added business routes and role checking to protect business/customer domains.
+- `lib/core/routing/route_names.dart`: Added new business route keys.
+
+### Implementation Details & Decisions Made
+- Routing explicitly checks `user.role` to redirect users out of `/business` and businesses out of `/home`.
+- On entering `/business`, if `myBusinessProvider` returns `null`, the router redirects to `/business/setup`.
+- Dashboard stats aggregate data natively from Supabase queries in `business_repository.dart`.
+- Business Orders separates lists into Tabs (`Bekleyen`, `Onaylanan`, `Tamamlanan`, `Tümü`) and filters memory-side using `businessOrdersProvider`.
+- Upon successful order pickup, an impact log is recorded using `ImpactRepository.createImpactLog`.
+- Shared `BusinessDashboardScreen` UI handles the `Ürünlerim` independent tab through the `productsOnly=true` layout variation.
+
+### Edge Cases Handled
+- Validated that `pickupEnd` must be chronologically after `pickupStart` in `product_create_screen`.
+- Implemented `AutoDispose` logic securely within providers, avoiding state retention across unintended sessions.
+
+### Future TODOs
+- Replace hardcoded coordinate creation in `BusinessSetupScreen` with real map point integration.
+- Implement storage interaction for `ProductCreateScreen` image attachments.
+- Pending final formula variables team vote for environmental impact coefficients used in `ImpactRepository`.

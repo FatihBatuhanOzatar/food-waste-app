@@ -50,3 +50,15 @@ final filteredProductListProvider = Provider<AsyncValue<List<Product>>>((ref) {
     return products.where((p) => categories.contains(p.category)).toList();
   });
 });
+
+/// Fetches all products for a specific business (all statuses).
+///
+/// Used by the business dashboard and product management screens.
+/// Keyed by [businessId] so different businesses get separate caches.
+final businessProductsProvider = FutureProvider.family<List<Product>, String>((
+  ref,
+  businessId,
+) {
+  final repo = ref.watch(productRepositoryProvider);
+  return repo.getBusinessProducts(businessId);
+});

@@ -86,3 +86,15 @@ class OrderNotifier extends AutoDisposeAsyncNotifier<void> {
     });
   }
 }
+
+/// Fetches all orders for a specific business, newest first.
+///
+/// Used by the business orders management screen.
+/// Keyed by [businessId] so different businesses get separate caches.
+final businessOrdersProvider = FutureProvider.family<List<app.Order>, String>((
+  ref,
+  businessId,
+) {
+  final repo = ref.watch(orderRepositoryProvider);
+  return repo.getBusinessOrders(businessId);
+});

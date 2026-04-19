@@ -55,4 +55,100 @@ class ProductRepository {
       throw NetworkException('Ürün yüklenemedi: ${e.message}');
     }
   }
+
+  // ---------------------------------------------------------------------------
+  // Business-side product management
+  // ---------------------------------------------------------------------------
+
+  /// Fetches all products for a specific business (all statuses).
+  ///
+  /// Unlike [fetchActiveProducts], this returns products in every
+  /// status so the business owner can manage their full inventory.
+  ///
+  /// Throws [NetworkException] if the query fails.
+  Future<List<Product>> getBusinessProducts(String businessId) async {
+    try {
+      final data = await _supabase
+          .from('products')
+          .select('*, businesses(name, latitude, longitude)')
+          .eq('business_id', businessId)
+          .order('created_at', ascending: false);
+
+      return data.map((json) => Product.fromJson(json)).toList();
+    } on PostgrestException catch (e) {
+      throw NetworkException('İşletme ürünleri yüklenemedi: ${e.message}');
+    }
+  }
+
+  /// Creates a new product listing.
+  ///
+  /// Throws [NetworkException] if the insert fails.
+  Future<Product> createProduct({
+    required String businessId,
+    required String name,
+    String? description,
+    required String category,
+    required String listingType,
+    required double originalPrice,
+    required double currentPrice,
+    required int stock,
+    required DateTime pickupStart,
+    required DateTime pickupEnd,
+  }) async {
+    try {
+      final data = await _supabase
+          .from('products')
+          .insert({
+            'business_id': businessId,
+            'name': name,
+            'description': description,
+            'category': category,
+            'listing_type': listingType,
+            'original_price': originalPrice,
+            'current_price': currentPrice,
+            'stock': stock,
+            'pickup_start': pickupStart.toUtc().toIso8601String(),
+            'pickup_end': pickupEnd.toUtc().toIso8601String(),
+            'status': 'active',
+          })
+          .select('*, businesses(name, latitude, longitude)')
+          .single();
+
+      return Product.fromJson(data);
+    } on PostgrestException catch (e) {
+      throw NetworkException('Ürün oluşturulamadı: ${e.message}');
+    }
+  }
+
+  /// Updates an existing product.
+  ///
+  /// Throws [NetworkException] if the update fails.
+  Future<Product> updateProduct(
+    String productId,
+    Map<String, dynamic> updates,
+  ) async {
+    try {
+      final data = await _supabase
+          .from('products')
+          .update(updates)
+          .eq('id', productId)
+          .select('*, businesses(name, latitude, longitude)')
+          .single();
+
+      return Product.fromJson(data);
+    } on PostgrestException catch (e) {
+      throw NetworkException('Ürün güncellenemedi: ${e.message}');
+    }
+  }
+
+  /// Deletes a product by [productId].
+  ///
+  /// Throws [NetworkException] if the delete fails.
+  Future<void> deleteProduct(String productId) async {
+    try {
+      await _supabase.from('products').delete().eq('id', productId);
+    } on PostgrestException catch (e) {
+      throw NetworkException('Ürün silinemedi: ${e.message}');
+    }
+  }
 }
