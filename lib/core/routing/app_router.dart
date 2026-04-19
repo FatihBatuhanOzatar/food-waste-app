@@ -1,44 +1,123 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/auth/providers/auth_provider.dart';
+import '../../features/auth/screens/home_placeholder_screen.dart';
+import '../../features/auth/screens/kvkk_consent_screen.dart';
+import '../../features/auth/screens/login_screen.dart';
+import '../../features/auth/screens/register_screen.dart';
 import 'route_names.dart';
 
-/// Application router configuration.
+/// Provides the [GoRouter] instance with auth-aware redirect logic.
 ///
-/// Currently wired to a single placeholder route while individual feature
-/// screens are implemented sprint by sprint. Full routing — including
-/// authentication guards, deep links, and nested navigation — will be added
-/// when the `auth` and `home` features are implemented.
-///
-/// See [RouteNames] for the complete set of reserved route names.
-final GoRouter appRouter = GoRouter(
-  initialLocation: '/',
-  debugLogDiagnostics: false,
-  routes: [
-    GoRoute(
-      path: '/',
-      name: RouteNames.home,
-      builder: (context, state) => const _PlaceholderScreen(),
-    ),
-  ],
-);
+/// The router watches [authStateProvider] and [currentUserProvider] to
+/// determine where to redirect:
+/// - Not authenticated → `/login`
+/// - Authenticated but KVKK not accepted → `/kvkk-consent`
+/// - Authenticated and KVKK accepted → `/home`
+final appRouterProvider = Provider<GoRouter>((ref) {
+  // Use a listenable to trigger router refresh on auth state changes.
+  final routerNotifier = _RouterNotifier(ref);
 
-/// Temporary placeholder screen rendered until feature screens are connected.
+  return GoRouter(
+    initialLocation: '/',
+    debugLogDiagnostics: false,
+    refreshListenable: routerNotifier,
+    redirect: (context, state) {
+      final authState = ref.read(authStateProvider);
+      final currentUser = ref.read(currentUserProvider);
+
+      // While auth state is loading, don't redirect.
+      final isAuthLoading = authState.isLoading || currentUser.isLoading;
+      if (isAuthLoading) return null;
+
+      // Determine auth status from both the auth stream and the profile.
+      final isLoggedIn =
+          authState.valueOrNull != null &&
+          authState.valueOrNull!.session != null;
+      final user = currentUser.valueOrNull;
+
+      final currentPath = state.matchedLocation;
+      final isOnAuthPage =
+          currentPath == '/login' || currentPath == '/register';
+      final isOnKvkkPage = currentPath == '/kvkk-consent';
+
+      // Not logged in → go to login (unless already on auth page).
+      if (!isLoggedIn) {
+        if (isOnAuthPage) return null;
+        return '/login';
+      }
+
+      // Logged in but no profile yet (still loading) → stay put.
+      if (user == null && !currentUser.hasError) return null;
+
+      // Logged in but KVKK not accepted → go to KVKK consent.
+      if (user != null && !user.hasAcceptedKvkk) {
+        if (isOnKvkkPage) return null;
+        return '/kvkk-consent';
+      }
+
+      // Logged in and KVKK accepted → go to home (unless already there).
+      if (isOnAuthPage || isOnKvkkPage || currentPath == '/') {
+        return '/home';
+      }
+
+      return null;
+    },
+    routes: [
+      GoRoute(
+        path: '/',
+        name: 'root',
+        builder: (context, state) => const _LoadingScreen(),
+      ),
+      GoRoute(
+        path: '/login',
+        name: RouteNames.login,
+        builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/register',
+        name: RouteNames.register,
+        builder: (context, state) => const RegisterScreen(),
+      ),
+      GoRoute(
+        path: '/kvkk-consent',
+        name: RouteNames.kvkkConsent,
+        builder: (context, state) => const KvkkConsentScreen(),
+      ),
+      GoRoute(
+        path: '/home',
+        name: RouteNames.home,
+        builder: (context, state) => const HomePlaceholderScreen(),
+      ),
+    ],
+  );
+});
+
+/// Listenable that triggers [GoRouter.refresh] when auth state changes.
 ///
-/// This widget will be removed as routes are wired to real feature screens.
-class _PlaceholderScreen extends StatelessWidget {
-  const _PlaceholderScreen();
+/// Watches both [authStateProvider] and [currentUserProvider] so the
+/// router re-evaluates its redirect logic whenever the user logs in,
+/// logs out, or accepts KVKK.
+class _RouterNotifier extends ChangeNotifier {
+  _RouterNotifier(this._ref) {
+    _ref.listen(authStateProvider, (_, _) => notifyListeners());
+    _ref.listen(currentUserProvider, (_, _) => notifyListeners());
+  }
+
+  final Ref _ref;
+}
+
+/// Simple loading screen shown at the root path while auth state resolves.
+class _LoadingScreen extends StatelessWidget {
+  const _LoadingScreen();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Center(
-        child: Text(
-          'Food Waste App — yakında!',
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
-      ),
+      body: const Center(child: CircularProgressIndicator()),
     );
   }
 }

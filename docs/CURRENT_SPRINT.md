@@ -7,6 +7,7 @@
 | Task | Completed | Notes |
 |------|-----------|-------|
 | Flutter project scaffold | 2026-04-16 | Full skeleton: packages, folder structure, core files, `flutter analyze` clean |
+| Auth feature implementation | 2026-04-19 | Login, register, KVKK consent screens; `AuthRepository`; Providers and GoRouter logic. |
 
 **Scaffold deliverables:**
 - `flutter create` with Android/iOS/Web platforms (`com.foodwasteapp`)
@@ -34,11 +35,10 @@ _Nothing currently in progress._
 
 ### 📋 Next Up
 
-> **Recommended next task: Auth Feature (Sprint 1, Week 1–2)**
+> **Recommended next task: Business Profile Feature (Sprint 1, Week 2)**
 
-1. **Auth feature implementation** — Login, register, KVKK consent screens; `AuthRepository` backed by Supabase Auth; `currentUserProvider` and `authStateProvider`; GoRouter auth guards redirecting unauthenticated users to `/login`.
-2. **Business profile feature** — After auth: business onboarding, `BusinessRepository`, `businessProvider`.
-3. **Database schema migration** — Create `profiles`, `businesses`, `products`, `orders` tables in Supabase with RLS policies (update `docs/DATABASE_SCHEMA.md`).
+1. **Business profile feature** — Business onboarding, `BusinessRepository`, `businessProvider`.
+2. **Database schema migration** — Create `profiles`, `businesses`, `products`, `orders` tables in Supabase with RLS policies (update `docs/DATABASE_SCHEMA.md`).
 
 ### 🚫 Blockers
 

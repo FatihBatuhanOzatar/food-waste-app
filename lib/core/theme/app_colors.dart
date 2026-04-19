@@ -32,11 +32,23 @@ abstract final class AppColors {
   /// Text/icon color on [secondary] surfaces.
   static const Color onSecondary = Color(0xFF2C1A0E);
 
+  /// Input field borders, dividers — warm gray.
+  static const Color outline = Color(0xFFD6CFC4);
+
+  /// Category chip unselected background, subtle contrast areas.
+  static const Color surfaceVariant = Color(0xFFF0E8E0);
+
   /// Semantic green — reserved exclusively for impact metrics (kg saved, CO₂).
   ///
   /// Do NOT use this color for general decoration. Per brand guidelines
   /// terracotta is the primary accent everywhere else.
   static const Color semanticGreen = Color(0xFF059669);
+
+  /// Semantic amber — countdown timers, urgency indicators.
+  static const Color semanticAmber = Color(0xFFD97706);
+
+  /// Semantic red — sold-out badges, order rejection.
+  static const Color semanticRed = Color(0xFFDC2626);
 
   /// Error state color.
   static const Color error = Color(0xFFB91C1C);
@@ -48,4 +60,7 @@ abstract final class AppColors {
   ///
   /// Use for input field borders and list dividers.
   static const Color borderSubtle = Color(0x4D2C1A0E);
+
+  /// Hint text color — medium gray.
+  static const Color hintText = Color(0xFF9E9E9E);
 }
