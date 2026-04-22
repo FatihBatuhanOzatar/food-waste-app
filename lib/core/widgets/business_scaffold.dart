@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../features/businesses/screens/business_dashboard_screen.dart';
 import '../../features/businesses/screens/business_orders_screen.dart';
+import '../../features/businesses/screens/business_profile_screen.dart';
 import '../theme/app_colors.dart';
 
 /// Business application scaffold with bottom navigation bar.
@@ -29,7 +30,7 @@ class _BusinessScaffoldState extends State<BusinessScaffold> {
     BusinessDashboardScreen(),
     _BusinessProductsFullScreen(),
     BusinessOrdersScreen(),
-    _BusinessProfilePlaceholder(),
+    BusinessProfileScreen(),
   ];
 
   @override
@@ -122,45 +123,5 @@ class _BusinessProductsFullScreen extends StatelessWidget {
     // The BusinessDashboardScreen already shows products; this tab
     // shows the same list without the dashboard cards.
     return const BusinessDashboardScreen(productsOnly: true);
-  }
-}
-
-/// Placeholder for the business profile tab.
-class _BusinessProfilePlaceholder extends StatelessWidget {
-  const _BusinessProfilePlaceholder();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.store,
-                size: 64,
-                color: AppColors.hintText.withValues(alpha: 0.5),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'İşletme Profili',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Yakında',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyLarge?.copyWith(color: AppColors.hintText),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }

@@ -11,6 +11,7 @@
 | Home / Product List screen | 2026-04-19 | Product model, ProductRepository (Supabase JOIN with businesses), providers (list + filter), ProductCard widget, ProductListScreen with category chips, MainScaffold with 4-tab bottom nav, router updated. |
 | Product detail & reservation | 2026-04-19 | Order model & OrderStatus enum, `OrderRepository` with stock decrement logic, `orderProvider`s, `ProductDetailScreen` (hero, reserve button, confirmation sheet), `MyOrdersScreen` integrated to `MainScaffold`, `/product/:id` route added. |
 | Business Panel | 2026-04-19 | `Business` model, `BusinessRepository`, Riverpod providers. `BusinessScaffold`, `BusinessDashboardScreen`, `BusinessOrdersScreen`, `ProductCreateScreen`, `BusinessSetupScreen`. Auth-aware routing for role='business'. `ImpactRepository` implemented for pickup tracking. |
+| Profile + Impact Dashboard (US-09, US-10) | 2026-04-22 | `ImpactRepository` extended with `getRecentImpactLogs`. `ImpactProvider` with `userImpactProvider`, `recentImpactLogsProvider`. `ImpactDashboardScreen` (3 metric cards, activity list, empty state, pull-to-refresh). `ProfileScreen` (avatar, user info, mini impact summary, settings menu, logout). `BusinessProfileScreen` (business info, owner details, menu, logout). All 4 user tabs and all 4 business tabs now functional — zero placeholders remain. |
 
 **Scaffold deliverables:**
 - `flutter create` with Android/iOS/Web platforms (`com.foodwasteapp`)

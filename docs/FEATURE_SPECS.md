@@ -130,3 +130,38 @@
 - Replace hardcoded coordinate creation in `BusinessSetupScreen` with real map point integration.
 - Implement storage interaction for `ProductCreateScreen` image attachments.
 - Pending final formula variables team vote for environmental impact coefficients used in `ImpactRepository`.
+
+## Profile + Impact Dashboard (US-09, US-10)
+
+### Files Created/Modified
+- `lib/features/profile/repositories/impact_repository.dart`: Extended with `getRecentImpactLogs` method (JOIN through `orders→products` for product names).
+- `lib/features/profile/providers/impact_provider.dart`: `impactRepositoryProvider`, `userImpactProvider` (aggregated totals), `recentImpactLogsProvider` (activity feed).
+- `lib/features/profile/screens/impact_dashboard_screen.dart`: Full "Etkim" tab with 3 metric cards, recent activity list, empty state, loading/error states, pull-to-refresh.
+- `lib/features/profile/screens/profile_screen.dart`: Full "Profil" tab with letter avatar, user info, role badge, mini impact summary, settings menu, logout with confirmation.
+- `lib/features/businesses/screens/business_profile_screen.dart`: Business "Profil" tab with business info card, owner details, address, settings menu, logout.
+- `lib/core/widgets/main_scaffold.dart`: Replaced placeholder screens with `ImpactDashboardScreen` and `ProfileScreen`. Removed `_PlaceholderScreen` class.
+- `lib/core/widgets/business_scaffold.dart`: Replaced `_BusinessProfilePlaceholder` with `BusinessProfileScreen`. Removed placeholder class.
+
+### Implementation Details & Decisions Made
+- Impact metrics use `AppColors.semanticGreen` for food/CO₂ and `AppColors.primary` (terracotta) for money — following the brand rule that green is only for impact metrics.
+- `ImpactRepository.getRecentImpactLogs` uses a nested JOIN (`impact_logs → orders → products`) to fetch product name and image URL in a single Supabase query.
+- Profile screen uses a letter avatar (first character of name or email) with terracotta background — no photo upload per spec.
+- Mini impact summary on profile is tappable but navigation to the Etkim tab uses a Notification dispatch pattern since tabs are managed by the parent StatefulWidget.
+- All non-functional menu items ("Hesap Bilgileri", "Bildirim Ayarları", "Gizlilik Politikası", "Yardım ve Destek") show a "Yakında eklenecek" SnackBar.
+- Logout uses an AlertDialog confirmation with "Çıkış yapmak istediğine emin misin?" before calling `AuthNotifier.logout()`.
+- Business profile screen mirrors user profile structure but shows business-specific info (business name, category badge, owner name, address).
+- Date formatting uses `intl` package (already in pubspec) with `DateFormat('dd MMM yyyy', 'tr_TR')`.
+
+### Edge Cases Handled
+- Null/empty user name falls back to "İsimsiz Kullanıcı" display.
+- Empty impact data (no logs yet) shows motivational empty state with "Keşfet" CTA button.
+- Loading and error states handled separately for impact totals and activity list.
+- Business profile handles both user and business async loading independently.
+
+### Future TODOs
+- Implement profile editing (name, phone change).
+- Implement notification settings screen.
+- Implement privacy policy page.
+- Add avatar photo upload capability.
+- Add impact trend charts/graphs (Phase 2).
+

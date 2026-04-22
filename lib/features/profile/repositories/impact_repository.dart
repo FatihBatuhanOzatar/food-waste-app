@@ -39,12 +39,14 @@ class ImpactRepository {
     }
   }
 
-  /// Gets total impact metrics for a specific user.
+  /// Gets aggregated impact totals for a specific user.
   ///
-  /// Returns a map with:
+  /// Returns a map with keys:
   /// - `totalFoodSavedKg`: total food saved in kg
   /// - `totalCo2SavedKg`: total CO₂ emissions prevented in kg
   /// - `totalMoneySavedTry`: total money saved in ₺
+  ///
+  /// If no impact logs exist, all values are 0.0.
   Future<Map<String, double>> getUserTotalImpact(String userId) async {
     try {
       final data = await _supabase
@@ -69,6 +71,36 @@ class ImpactRepository {
       };
     } on PostgrestException catch (e) {
       throw NetworkException('Etki verileri yüklenemedi: ${e.message}');
+    }
+  }
+
+  /// Gets recent impact logs for a user with product info.
+  ///
+  /// Joins with the `orders` table and `products` table to include
+  /// the product name and image URL. Returns up to [limit] rows,
+  /// ordered by most recent first.
+  ///
+  /// Each entry in the returned list contains:
+  /// - `id`, `food_saved_kg`, `co2_saved_kg`, `money_saved_try`, `created_at`
+  /// - `orders.products.name`, `orders.products.image_url`
+  Future<List<Map<String, dynamic>>> getRecentImpactLogs(
+    String userId, {
+    int limit = 20,
+  }) async {
+    try {
+      final data = await _supabase
+          .from('impact_logs')
+          .select(
+            'id, food_saved_kg, co2_saved_kg, money_saved_try, created_at, '
+            'orders!inner(products!inner(name, image_url))',
+          )
+          .eq('user_id', userId)
+          .order('created_at', ascending: false)
+          .limit(limit);
+
+      return List<Map<String, dynamic>>.from(data);
+    } on PostgrestException catch (e) {
+      throw NetworkException('Son aktiviteler yüklenemedi: ${e.message}');
     }
   }
 }

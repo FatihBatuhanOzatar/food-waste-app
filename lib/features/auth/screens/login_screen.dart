@@ -69,7 +69,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 // Logo text
                 Center(
                   child: Text(
-                    'tukka',
+                    'foodwasteapp',
                     style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                       fontSize: 48,
                       fontWeight: FontWeight.w900,

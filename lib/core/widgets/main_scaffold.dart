@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../../features/orders/screens/my_orders_screen.dart';
 import '../../features/products/screens/product_list_screen.dart';
+import '../../features/profile/screens/impact_dashboard_screen.dart';
+import '../../features/profile/screens/profile_screen.dart';
 
 /// Main application scaffold with bottom navigation bar.
 ///
-/// Wraps the home screen and future tab screens. Follows the
+/// Wraps all four user-facing tab screens. Follows the
 /// Bottom Navigation Bar spec from `docs/UI_GUIDELINES.md`:
 /// - 4 tabs: Keşfet, Siparişlerim, Etkim, Profil
 /// - Active tab: terracotta icon + label
@@ -24,14 +26,11 @@ class _MainScaffoldState extends State<MainScaffold> {
   int _currentIndex = 0;
 
   /// The screens for each tab.
-  ///
-  /// Only the first tab (Keşfet) is implemented.
-  /// Others are placeholder screens.
   static const List<Widget> _screens = [
     ProductListScreen(),
     MyOrdersScreen(),
-    _PlaceholderScreen(title: 'Etkim', message: 'Yakında'),
-    _PlaceholderScreen(title: 'Profil', message: 'Yakında'),
+    ImpactDashboardScreen(),
+    ProfileScreen(),
   ];
 
   @override
@@ -101,49 +100,6 @@ class _MainScaffoldState extends State<MainScaffold> {
               ).textTheme.labelSmall?.copyWith(color: color),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Placeholder screen for unimplemented tabs.
-class _PlaceholderScreen extends StatelessWidget {
-  const _PlaceholderScreen({required this.title, required this.message});
-
-  final String title;
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.construction,
-                size: 64,
-                color: AppColors.hintText.withValues(alpha: 0.5),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                title,
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                message,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyLarge?.copyWith(color: AppColors.hintText),
-              ),
-            ],
-          ),
         ),
       ),
     );
